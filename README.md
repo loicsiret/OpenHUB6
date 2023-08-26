@@ -27,4 +27,9 @@ This project is not affiliated with or endorsed by HUB6 Inc.
 6. Upload the two new User Interface file [here](/openhub6/openhub6/files/usr/lib/lua/luci/model/cbi/security-module) to OpenHub **/usr/lib/lua/luci/model/cbi/security-module/**:
    - alarm-notify.lua
    - alarm-event.lua
-7. 
+7. Upload the updated Menu file [here](/openhub6/openhub6/files/usr/lib/lua/luci/controller/security) to OpenHub **/usr/lib/lua/luci/controller/security/**:
+   - security.lua
+8. Upload the new Event Notifier script [here](/openhub6/openhub6/files/root) to OpenHub **/root/**:
+   - event-notifier.sh
+9. Upload the updated DSC IT-100 Listener script [here](/openhub6/openhub6/files/usr/bin) to OpenHub **/usr/bin/**:
+   - dsc-it100
