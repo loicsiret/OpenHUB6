@@ -21,7 +21,7 @@ This project is not affiliated with or endorsed by HUB6 Inc.
    - Upload the above packages
      - Menu: System➡️Software➡️Upload Package Button
 4. Install openssh-sftp-server (easier to upload files)
-5. Upload the two new config files to OpenHub **/etc/config/**:
+5. Upload the two new config files [here](/openhub6/openhub6/files/etc/config) to OpenHub **/etc/config/**:
    - alarm-event
    - alarm-notify
 6. 
