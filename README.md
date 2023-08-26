@@ -18,5 +18,10 @@ This project is not affiliated with or endorsed by HUB6 Inc.
      - [Package List](downloads.openwrt.org/releases/19.07.8/packages/mips_24kc/packages)
      - libmosquitto-nossl_1.6.15_mips_24kc.ipk
      - mosquitto-client-nossl_mips_24kc.ipk
+   - Upload the above packages
+     - Menu: System➡️Software➡️Upload Package Button
 4. Install openssh-sftp-server (easier to upload files)
-5. 
+5. Upload the two new config files to OpenHub **/etc/config/**:
+   - alarm-event
+   - alarm-notify
+6. 
