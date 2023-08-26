@@ -1,0 +1,52 @@
+# MQTT devices
+mqtt:
+
+# Alarm - https://www.home-assistant.io/integrations/alarm_control_panel.mqtt/
+# MQTT - https://www.home-assistant.io/integrations/mqtt/
+# The Alarm icon will change state after receiving a new state from state_topic.
+# The integration will accept the following states from your Alarm Panel (in lower case):
+#    disarmed, armed_home, armed_away, pending, triggered, arming, disarming
+  alarm_control_panel:
+    - name: "Alarm Partition 1"
+      state_topic: "dsc/Get/Partition1"
+      command_topic: "dsc/Set"
+      payload_disarm: "1D"
+      payload_arm_home: "1S"
+      payload_arm_away: "1A"
+      
+# Alarm - https://www.home-assistant.io/components/binary_sensor.mqtt/
+  binary_sensor:
+    - name: "Security Trouble"
+      state_topic: "dsc/Get/Trouble"
+      device_class: "problem"
+      payload_on: "1"
+      payload_off: "0"
+    - name: "Zone 1 - Entry"
+      state_topic: "dsc/Get/Zone001"
+      device_class: "door"
+      payload_on: "1"
+      payload_off: "0"
+    - name: "Zone 2 - Bedrooms"
+      state_topic: "dsc/Get/Zone002"
+      device_class: "window"
+      payload_on: "1"
+      payload_off: "0"
+    - name: "Zone 3 - Living Room"
+      state_topic: "dsc/Get/Zone003"
+      device_class: "window"
+      payload_on: "1"
+      payload_off: "0"
+    - name: "Zone 4 - Hall Motion"
+      state_topic: "dsc/Get/Zone004"
+      device_class: "motion"
+      payload_on: "1"
+      payload_off: "0"
+
+  text:
+# Alarm - https://www.home-assistant.io/integrations/text.mqtt/
+    - name: "Alarm Partition"
+      mode: "text"
+      unique_id: "alarm_message"
+      state_topic: "dsc/Get/Partition/Message"
+      command_topic: "dsc/Set/Partition"
+      icon: "mdi:shield"
