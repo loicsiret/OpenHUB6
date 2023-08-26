@@ -24,4 +24,7 @@ This project is not affiliated with or endorsed by HUB6 Inc.
 5. Upload the two new config files [here](/openhub6/openhub6/files/etc/config) to OpenHub **/etc/config/**:
    - alarm-event
    - alarm-notify
-6. 
+6. Upload the two new User Interface file [here](/openhub6/openhub6/files/usr/lib/lua/luci/model/cbi/security-module) to OpenHub **/usr/lib/lua/luci/model/cbi/security-module/**:
+   - alarm-notify.lua
+   - alarm-event.lua
+7. 
