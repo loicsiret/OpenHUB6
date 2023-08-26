@@ -1,0 +1,13 @@
+
+config info 'api'
+  # Pushover Settings
+  option push_user_key 'PUSHOVER USER KEY'
+  option push_api_key 'PUSHOVER API KEY'
+  # Telegram Settings
+  option tel_api_token '123456789:AaZz0...AaZz9'
+  option tel_chatid '12345678910'
+  # Home Assistant Setting
+  option ha_ip '0.0.0.0'
+  option ha_port '1883'
+  option ha_user 'HOME ASSISTANT MQTT USER NAME'
+  option ha_pass 'HOME ASSISTANT MQTT PASSWORD'
