@@ -183,7 +183,8 @@ while read -s raw < /dev/ttyUSB0; do
     zone=${cmddata:3:3}
     zonelabel=`uci get security-zone.label.$zone`
     event="Zone Open (609) $zonelabel ($zone)"
-    haTopic=$HA_TOPICZONE${zone:2:1}
+    #haTopic=$HA_TOPICZONE${zone:2:1}
+    haTopic=$HA_TOPICZONE$zone
     haMsg="1"
     ;;
 
@@ -191,7 +192,8 @@ while read -s raw < /dev/ttyUSB0; do
     zone=${cmddata:3:3}
     zonelabel=`uci get security-zone.label.$zone`
     event="Zone Restored (610) $zonelabel ($zone)"
-    haTopic=$HA_TOPICZONE${zone:2:1}
+    #haTopic=$HA_TOPICZONE${zone:2:1}
+    haTopic=$HA_TOPICZONE$zone
     haMsg="0"
     ;;
 
