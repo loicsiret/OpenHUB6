@@ -3,11 +3,18 @@
 # William Franzin, wfranzin@gmail.com, Feb 6 2022
 # Provided as-is, use at your own risk, it's free
 
+## Home Assistant Topics            Related Messages
+## Append zone# or partition# to topic when appropriate
+HA_TOPICZONE="dsc/Get/Zone"         # open= 1, closed= 0 - append zone# to topic
+HA_TOPICSTATUS="dsc/Get/Partition"  # disarmed, armed_home, armed_away, triggered (alarm), arming, disarming
+HA_TOPICTROUBLE="dsc/Get/Trouble"   # trouble= 1, restored= 0
+
 # syslog listener started
 logger -t $0 "listener started"
 
 # init serial comms with the it-100 at 9600 baud
 # it-100 is wired to the ftdi usb-serial /dev/ttyUSB0
+#daemon.err dsc-it100[15342]: /usr/bin/dsc-it100: line 12: stty: not found
 stty -F /dev/ttyUSB0 9600 clocal cread cs8 -cstopb -parenb
 logger -t $0 "serial initialized"
 
@@ -16,8 +23,7 @@ logger -t $0 "serial initialized"
 logger -t $0 "waiting for events..."
 while read -s raw < /dev/ttyUSB0; do
 
-  # event data
-  # get single line of text into raw
+  # event data - get single line of text into raw
   #echo raw=$raw
 
   # strip the command+data from raw into cmddata
@@ -43,6 +49,10 @@ while read -s raw < /dev/ttyUSB0; do
 
   # setup event
   event=""
+
+  ## Home Assistant message
+  haTopic=""
+  haMsg=""
 
   # handle partition labels when required
   # cmds 650,651,652,653,654,655,656,657,658,659,660,670,671,672,673,700,701,702,750,751,840,841,900
@@ -85,7 +95,7 @@ while read -s raw < /dev/ttyUSB0; do
   # handle the usual commands and common response format
   # handle the cmd
   case $cmd in
-  500) # Command Acknowledge
+  500) # Command Acknowledge (command received)
     event="Command Acknowledge (500)"
     ;;
 
@@ -101,7 +111,7 @@ while read -s raw < /dev/ttyUSB0; do
     event="Time/Date Broadcast (550)"
     ;;
 
-  560) # Ring Detected
+  560) # Ring Detected (Ring on the telephone line)
     event="Ring Detected (560)"
     ;;
 
@@ -109,7 +119,7 @@ while read -s raw < /dev/ttyUSB0; do
     event="Indoor Temperature Broadcast (561)"
     ;;
 
-  562) # Outdoor Temperatrure Broadcast
+  562) # Outdoor Temperature Broadcast
     event="Outdoor Temperatrure Broadcast (562)"
     ;;
 
@@ -125,7 +135,7 @@ while read -s raw < /dev/ttyUSB0; do
     event="Baud Rate Set (580)"
     ;;
 
-  601) # Zone Alarm
+  601) # Zone ALARM
     partition=${cmddata:3:1}
     partitionlabel=`uci get security-partition.label.$partition`
     zone=${cmddata:4:3}
@@ -173,19 +183,23 @@ while read -s raw < /dev/ttyUSB0; do
     zone=${cmddata:3:3}
     zonelabel=`uci get security-zone.label.$zone`
     event="Zone Open (609) $zonelabel ($zone)"
+    haTopic=$HA_TOPICZONE${zone:2:1}
+    haMsg="1"
     ;;
 
   610) # Zone Restored
     zone=${cmddata:3:3}
     zonelabel=`uci get security-zone.label.$zone`
     event="Zone Restored (610) $zonelabel ($zone)"
+    haTopic=$HA_TOPICZONE${zone:2:1}
+    haMsg="0"
     ;;
 
-  620) # Duress Alarm
+  620) # Duress ALARM
     event="Duress Alarm (620)"
     ;;
 
-  621) # [F] Key Alarm
+  621) # [F] Key ALARM (Fire keypad button pressed for alarm)
     event="[F] Key Alarm (621)"
     ;;
 
@@ -193,7 +207,7 @@ while read -s raw < /dev/ttyUSB0; do
     event="[F] Key Restoral (622)"
     ;;
 
-  623) # [A] Key Alarm
+  623) # [A] Key ALARM (Auxiliary keypad button pressed for alarm)
     event="[A] Key Alarm (623)"
     ;;
 
@@ -201,7 +215,7 @@ while read -s raw < /dev/ttyUSB0; do
     event="[A] Key Restoral (624)"
     ;;
 
-  625) # [P] Key Alarm
+  625) # [P] Key ALARM (Panic keypad button pressed for alarm)
     event="[P] Key Alarm (625)"
     ;;
 
@@ -209,7 +223,7 @@ while read -s raw < /dev/ttyUSB0; do
     event="[P] Key Restoral (626)"
     ;;
 
-  631) # Auxiliary Input Alarm
+  631) # Auxiliary Input ALARM (2-wire smoke alarm)
     event="Auxiliary Input Alarm (631)"
     ;;
 
@@ -217,7 +231,7 @@ while read -s raw < /dev/ttyUSB0; do
     event="Auxiliary Input Alarm Restored (632)"
     ;;
 
-  650) # Partition Ready
+  650) # Partition Ready (the partition is ready and can be armed)
     event="Partition Ready (650) $partitionlabel ($partition)"
     ;;
 
@@ -229,19 +243,24 @@ while read -s raw < /dev/ttyUSB0; do
     partition=${cmddata:3:1}
     partitionlabel=`uci get security-partition.label.$partition`
     data1=${cmddata:4:1}
+    haTopic=$HA_TOPICSTATUS$partition
     # handle mode
     case $data1 in
       0) # Away
       data2="Away"
+      haMsg="armed_away"
       ;;
       1) # Stay
       data2="Stay"
+      haMsg="armed_home"
       ;;
       2) # Away, No Delay
       data2="Away, No Delay"
+      haMsg="armed_away"
       ;;
       3) # Stay, No Delay
       data2="Stay, No Delay"
+      haMsg="armed_home"
       ;;
     esac
     #event="Partition Armed - Descriptive Mode (652)" #default
@@ -252,23 +271,31 @@ while read -s raw < /dev/ttyUSB0; do
     event="Partition in Ready to Force Arm (653) $partitionlabel ($partition)"
     ;;
 
-  654) # Partition In Alarm
+  654) # Partition In ALARM
     event="Partition In Alarm (654) $partitionlabel ($partition)"
+    haTopic=$HA_TOPICSTATUS$partition
+    haMsg="triggered"
     ;;
 
   655) # Partition Disarmed
     event="Partition Disarmed (655) $partitionlabel ($partition)"
+    haTopic=$HA_TOPICSTATUS$partition
+    haMsg="disarmed"
     ;;
 
   656) # Exit Delay in Progress
     event="Exit Delay in Progress (656) $partitionlabel ($partition)"
+    #haTopic=$HA_TOPICSTATUS$partition
+    #haMsg="arming"
     ;;
 
   657) # Entry Delay in Progress
     event="Entry Delay in Progress (657) $partitionlabel ($partition)"
+    #haTopic=$HA_TOPICSTATUS$partition
+    #haMsg="disarming"
     ;;
 
-  658) # Keypad Lock-out
+  658) # Keypad Lock-out (too many failed user attempts)
     event="Keypad Lock-out (658) $partitionlabel ($partition)"
     ;;
 
@@ -316,7 +343,7 @@ while read -s raw < /dev/ttyUSB0; do
     event="Special Opening (751) $partitionlabel ($partition)"
     ;;
 
-  800) # Panel Battery Trouble
+  800) # Panel Battery Trouble (low battery)
     event="Panel Battery Trouble (800)"
     ;;
 
@@ -324,7 +351,7 @@ while read -s raw < /dev/ttyUSB0; do
     event="Panel Battery Trouble Restore (801)"
     ;;
 
-  802) # Panel AC Trouble
+  802) # Panel AC Trouble (lost AC power)
     event="Panel AC Trouble (802)"
     ;;
 
@@ -340,7 +367,7 @@ while read -s raw < /dev/ttyUSB0; do
     event="System Bell Trouble Restoral (807)"
     ;;
 
-  810) # TLM raw 1 Trouble
+  810) # TLM raw 1 Trouble (Phone line)
     event="TLM raw 1 Trouble (810)"
     ;;
 
@@ -348,7 +375,7 @@ while read -s raw < /dev/ttyUSB0; do
     event="TLM raw 1 Trouble Restored (811)"
     ;;
 
-  812) # TLM raw 2 Trouble
+  812) # TLM raw 2 Trouble (Phone line)
     event="TLM raw 2 Trouble (812)"
     ;;
 
@@ -356,7 +383,7 @@ while read -s raw < /dev/ttyUSB0; do
     event="TLM raw 2 Trouble Restored (813)"
     ;;
 
-  814) # FTC Trouble
+  814) # FTC Trouble (Failed to Communicate with monitoring station)
     event="FTC Trouble (814)"
     ;;
 
@@ -453,21 +480,34 @@ while read -s raw < /dev/ttyUSB0; do
     ;;
 
   908) # Software Version
-    #event="Software Version (908)"
+    event="Software Version (908)"
+    ;;
+  esac
+
+  ## Handle TROUBLE states for Home Assistant
+  case $cmd in 800|802|806|810|812|821|825|827|829|831|842)
+    haTopic=$HA_TOPICTROUBLE
+    haMsg="1"
+    ;;
+  esac
+  ## Handle trouble RESTORE states for Home Assistant
+  case $cmd in 801|803|807|811|813|822|826|828|830|832|843)
+    haTopic=$HA_TOPICTROUBLE
+    haMsg="0"
     ;;
   esac
 
   # handle event (if not blank)
   if [[ ! -z "$event" ]]
   then
-    # continue if event isnt blank
     #echo event=$event
 
     # syslog the event
-    logger -t $0 "raw=$raw cmddata=$cmddata cmd=$cmd event=$event"
+    #logger -t $0 "raw=$raw cmddata=$cmddata cmd=$cmd event=$event"
 
-    # run the user-specified cmd with arguements cmd cmddata event
-    `uci get security-event.cmd.$cmd` "$cmd" "$cmddata" "$event" &
+    # run notify script in background(&) with arguments: cmd cmddata event haTopic haMsg
+    #`uci get security-event.cmd.$cmd` "$cmd" "$cmddata" "$event" &
+    /root/event-notifier.sh "$cmd" "$cmddata" "$event" "$haTopic" "$haMsg" &
   fi
 
 done
