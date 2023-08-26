@@ -7,6 +7,7 @@ This project is not affiliated with or endorsed by HUB6 Inc.
 
 > [!IMPORTANT]
 > You must have William Franzin's OpenHub image installed and working on your Safe device.
+> I have not built a new image, hopefully @wfranzin can help with that.
 
 1. Connect to OpenHub from your laptop (192.168.255.1)
 2. Install Mosquitto MQTT Client on OpenHub
