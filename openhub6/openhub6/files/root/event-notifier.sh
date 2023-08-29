@@ -5,7 +5,7 @@
 
 ## get the Notifier Event label based on the command
 notifylabel=""
-notifylabel=`uci get alarm-event.cmd.$1`
+notifylabel=`uci -q get alarm-event.cmd.$1`
 
 # System Log
 case $notifylabel in
