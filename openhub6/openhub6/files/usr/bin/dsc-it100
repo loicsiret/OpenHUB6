@@ -509,7 +509,35 @@ while read -s raw < /dev/ttyUSB0; do
 
     # run notify script in background(&) with arguments: cmd cmddata event haTopic haMsg
     #`uci get security-event.cmd.$cmd` "$cmd" "$cmddata" "$event" &
-    /root/event-notifier.sh "$cmd" "$cmddata" "$event" "$haTopic" "$haMsg" &
+    #/root/event-notifier.sh "$cmd" "$cmddata" "$event" "$haTopic" "$haMsg" &
+
+    ## get the Notifier Event label based on the command
+    notifylabel=""
+    notifylabel=`uci -q get alarm-event.cmd.$cmd`
+
+    # System Log
+    case $notifylabel in
+      *L*)
+        logger -t $0 "cmd=$cmd cmddata=$cmddata event=$event haTopic=$haTopic haMsg=$haMsg notify=$notifylabel - raw=$raw" &
+    ;; esac
+
+    # T - Telegram Notification - World42Alarm bot
+    case $notifylabel in
+      *T*)
+        /root/notify-telegram.sh "$event" &
+    ;; esac
+
+    # P - Pushover Notification
+    case $notifylabel in
+      *P*)
+        /root/notify-push.sh "$event" &
+    ;; esac
+
+    # H - Home Assistant Notification
+    case $notifylabel in
+      *H*)
+        /root/notify-home.sh "$cmd" "$cmddata" "$event" "$haTopic" "$haMsg" &
+    ;; esac
   fi
 
 done
