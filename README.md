@@ -29,10 +29,14 @@ This project is not affiliated with or endorsed by HUB6 Inc.
    - alarm-event.lua
 7. Upload the updated Menu file [here](/openhub6/openhub6/files/usr/lib/lua/luci/controller/security) to OpenHub **/usr/lib/lua/luci/controller/security/**:
    - security.lua
-8. Upload the new Event Notifier script [here](/openhub6/openhub6/files/root) to OpenHub **/root/**:
-   - event-notifier.sh
-9. Upload the updated DSC IT-100 Listener script [here](/openhub6/openhub6/files/usr/bin) to OpenHub **/usr/bin/**:
+8. Upload the new Event Notifier scripts [here](/openhub6/openhub6/files/root) to OpenHub **/root/**:
+   - notify-home.sh
+   - notify-push.sh
+   - notify-telegram.sh
+9. You will need to change the "file permissions" on the Event Notifier scripts.
+   - Include the ability to "Execute" the script
+11. Upload the updated DSC IT-100 Listener script [here](/openhub6/openhub6/files/usr/bin) to OpenHub **/usr/bin/**:
    - dsc-it100
-10. **Reload the dsc-it100 script:**
+11. **Reload the dsc-it100 script:**
     - Open the Luci User Interface (192.168.255.1)
     - System➡️Startup➡️dsc-it100➡️RESTART
