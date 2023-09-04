@@ -57,5 +57,5 @@ Add to your **configuration.yaml**:
 2. Click the link to your new bot.
 3. Press or type "/start"
 4. Log in to Openub Luci interface (192.168.255.1)
-   - Go to the Notifications Tab and add your API token
+   - Go to the Notifications Tab and add your Telegram API token & Chat ID
 
