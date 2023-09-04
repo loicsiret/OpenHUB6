@@ -3,7 +3,7 @@ OpenHUB6 is open, developer-friendly firmware for Safe.
 This project is not affiliated with or endorsed by HUB6 Inc.
 
 
-## [Home Assistant](https://www.home-assistant.io/) and [Telegram Messenger](https://telegram.org/) Notifications
+## OpenHub [Home Assistant](https://www.home-assistant.io/) and [Telegram Messenger](https://telegram.org/) Notifications
 
 > [!IMPORTANT]
 > You must have William Franzin's OpenHub image installed and working on your Safe device.
@@ -40,3 +40,20 @@ This project is not affiliated with or endorsed by HUB6 Inc.
 11. **Reload the dsc-it100 script:**
     - Open the Luci User Interface (192.168.255.1)
     - System➡️Startup➡️dsc-it100➡️RESTART
+
+## Home Assistant Setup
+
+Add to your **configuration.yaml**:
+  - The configuration.yaml is found [here](/home-assistant/configuration.yaml)
+  - Add and name your zones to match with your alarm panel
+  - Update the "device_class" to the type of sensor
+
+## Telegram Setup
+
+1. Create a bot
+   1. Enter @Botfather in the search tab and choose this bot.
+   2. Enter “/newbot” and enter the name for your bot
+   3. Copy the HTTP API token (Add to OpenHub)
+2. Click the link to your new bot.
+3. Press or type "/start"
+4. Your bot should be good to receive messages from OpenHub
