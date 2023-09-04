@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# T - Telegram Notification - World42Alarm bot
+# T - Telegram Notification
 botToken=`uci get alarm-notify.api.tel_api_token`
 chatID=`uci get alarm-notify.api.tel_chatid`
 URL="https://api.telegram.org/bot$botToken/sendMessage"
