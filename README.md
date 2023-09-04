@@ -41,14 +41,14 @@ This project is not affiliated with or endorsed by HUB6 Inc.
     - Open the Luci User Interface (192.168.255.1)
     - System➡️Startup➡️dsc-it100➡️RESTART
 
-## Home Assistant Setup
+## 🏠 Home Assistant Setup
 
 Add to your **configuration.yaml**:
   - The configuration.yaml is found [here](/home-assistant/configuration.yaml)
   - Add and name your zones to match with your alarm panel
   - Update the "device_class" to the type of sensor
 
-## Telegram Setup
+## 📨 Telegram Setup
 
 1. Create a bot
    1. Enter @Botfather in the search tab and choose this bot.
