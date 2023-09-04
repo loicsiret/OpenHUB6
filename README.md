@@ -36,7 +36,7 @@ This project is not affiliated with or endorsed by HUB6 Inc.
 9. You will need to change the "file permissions" on the Event Notifier scripts.
    - Include the ability to "Execute" the script
 11. Upload the updated DSC IT-100 Listener script [here](/openhub6/openhub6/files/usr/bin) to OpenHub **/usr/bin/**:
-   - dsc-it100
+    - dsc-it100
 11. **Reload the dsc-it100 script:**
     - Open the Luci User Interface (192.168.255.1)
     - System➡️Startup➡️dsc-it100➡️RESTART
