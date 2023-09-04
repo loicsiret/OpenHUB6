@@ -56,4 +56,6 @@ Add to your **configuration.yaml**:
    3. Copy the HTTP API token (Add to OpenHub)
 2. Click the link to your new bot.
 3. Press or type "/start"
-4. Your bot should be good to receive messages from OpenHub
+4. Log in to Openub Luci interface (192.168.255.1)
+   - Go to the Notifications Tab and add your API token
+
