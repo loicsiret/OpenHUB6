@@ -13,7 +13,7 @@ case $notifylabel in
     logger -t $0 "1=$1 2=$2 3=$3 4=$4 5=$5 Notify=$notifylabel"
 ;; esac
 
-# T - Telegram Notification - World42Alarm bot
+# T - Telegram Notification
 case $notifylabel in
   *T*)
     botToken=`uci get alarm-notify.api.tel_api_token`
