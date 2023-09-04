@@ -10,6 +10,7 @@
 # Packages determined by using the command below on a development device
 # echo $(opkg list-installed | sed -e "s/\s.*$//")
 # Files contains the additional customizations on top of the stock fw
+# Added libmosquitto-nossl and mosquitto-client-nossl
 
 OPENHUB6PKG_PATH=../openhub6
 rm -f files.tar.gz
