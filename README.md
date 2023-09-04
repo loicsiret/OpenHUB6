@@ -15,7 +15,7 @@ This project is not affiliated with or endorsed by HUB6 Inc.
      - Menu: System➡️Software➡️Installed Tab
      - Click the remove button beside libmosquitto-ssl
    - Download the following Mosquitto packages to your laptop from:
-     - [Package List](downloads.openwrt.org/releases/19.07.8/packages/mips_24kc/packages)
+     - [Package List](https://downloads.openwrt.org/releases/19.07.8/packages/mips_24kc/packages/)
      - libmosquitto-nossl_1.6.15_mips_24kc.ipk
      - mosquitto-client-nossl_mips_24kc.ipk
    - Upload the above packages
