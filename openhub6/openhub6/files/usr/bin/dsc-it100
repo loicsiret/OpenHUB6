@@ -14,7 +14,8 @@ logger -t $0 "listener started"
 
 # init serial comms with the it-100 at 9600 baud
 # it-100 is wired to the ftdi usb-serial /dev/ttyUSB0
-#daemon.err dsc-it100[15342]: /usr/bin/dsc-it100: line 12: stty: not found
+#daemon.err dsc-it100[15342]: /usr/bin/dsc-it100: line 19: stty: not found
+#  if you get the above error but it's otherwise working, you can disregard it.
 stty -F /dev/ttyUSB0 9600 clocal cread cs8 -cstopb -parenb
 logger -t $0 "serial initialized"
 
